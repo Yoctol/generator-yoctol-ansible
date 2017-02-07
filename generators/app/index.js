@@ -28,14 +28,14 @@ module.exports = class extends Generator {
         type: 'confirm',
         name: 'useSubprojects',
         message: 'Is this project containing sub-projects?',
-        default: false
+        default: false,
       }, {
         when: answers => answers.useSubprojects,
         type: 'checkbox',
         name: 'subProjects',
         message: 'Select sub-projects to be deployed.',
         choices: folders.map(getBasename).filter(isNotNodeModules),
-        validate: selected => !!selected.length
+        validate: selected => !!selected.length,
       }, {
         when: answers => answers.useSubprojects,
         type: 'checkbox',
@@ -93,8 +93,12 @@ module.exports = class extends Generator {
       );
       this.fs.copy(
         this.templatePath('init.sh'),
-        this.destinationPath(this.ansibleDirName, `files/init.sh`)
+        this.destinationPath(this.ansibleDirName, 'files/init.sh')
       );
     }
+    this.fs.copy(
+      this.templatePath('gitignore'),
+      this.destinationPath(this.ansibleDirName, '.gitignore')
+    );
   }
 };
