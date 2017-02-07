@@ -1,0 +1,28 @@
+---
+# Node.js version.
+node_version: 6
+
+# The project name to be used in naming.
+project_name: <%= projectName %>
+
+# The build version. You should pass info needed in with --extra-vars in command line.
+version: "{{ git_tag | default(git_commit_sha) }}"
+
+# Directory to store files of builds on the host.
+host_builds_dir: "{{ ansible_env['HOME'] }}/builds/{{ project_name }}"
+# Directory to store files builded this time, under host_builds_dir.
+host_distribution_dir: "{{ host_builds_dir }}/{{ version | default('default') }}"
+
+# Directory to store cached files on the host.
+host_cache_dir: "{{ ansible_env['HOME'] }}/app_cache/{{ project_name }}"
+# Directory to cache node_modules of all spectrum sub-modules.
+host_module_dir: "{{ host_cache_dir }}/node_modules/{{ node_version }}"
+# Directory to cache configs.
+host_config_dir: "{{ host_cache_dir }}/config"
+
+# Port to be exposed on the host.
+app_host_port: 8080
+
+# User inside container
+container_user: app
+container_project_dir: "/home/{{ container_user }}/{{ project_name }}"

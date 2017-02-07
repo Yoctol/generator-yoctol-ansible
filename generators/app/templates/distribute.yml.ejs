@@ -1,0 +1,52 @@
+---
+- hosts: deployment
+  vars:
+    project_dir: "{{ playbook_dir }}/../.."
+
+# Script to distribute your code or excutable to the host.
+
+  tasks:
+  - name: check/create distribution directory on the host
+    file: path="{{ host_distribution_dir }}" state=directory
+
+  - name: move archived file to the host
+    copy:
+<% if (useSubprojects) { -%>
+      src: "{{ project_dir }}/{{ items }}.tar.gz"
+      dest: "{{ host_distribution_dir }}/"
+    with_items:
+<%   serviceSubProjects.forEach(subProject => { -%>
+    - <%= subProject %>
+<%   }); -%>
+<% } else { -%>
+      src: "{{ project_dir }}/{{ project_name }}.tar.gz"
+      dest: "{{ host_distribution_dir }}/"
+<% } -%>
+
+  - name: move init file to host
+    copy:
+<% if (useSubprojects) { -%>
+      src: ../files/init-{{ items }}.sh
+      dest: "{{ host_distribution_dir }}/"
+    with_items:
+<%   serviceSubProjects.forEach(subProject => { -%>
+    - <%= subProject %>
+<%   }); -%>
+<% } else { -%>
+      src: ../files/init.sh
+      dest: "{{ host_distribution_dir }}/"
+<% } -%>
+
+  - name: move dockerfile to host
+    template:
+<% if (useSubprojects) { -%>
+      src: ../files/{{ items }}-Dockerfile.template
+      dest: "{{ host_distribution_dir }}/{{ items }}-Dockerfile"
+    with_items:
+<%   serviceSubProjects.forEach(subProject => { -%>
+    - <%= subProject %>
+<%   }); -%>
+<% } else { -%>
+      src: ../files/Dockerfile.template
+      dest: "{{ host_distribution_dir }}/Dockerfile"
+<% } -%>

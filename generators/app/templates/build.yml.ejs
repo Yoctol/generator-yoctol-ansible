@@ -1,0 +1,50 @@
+---
+- hosts: localhost
+  vars:
+    project_dir: "{{ playbook_dir }}/../.."
+
+# Script to build and archive project at local.
+
+  tasks:
+  - name: build project
+    shell: npm i --quiet && npm prune && npm run build
+    args:
+<% if (useSubprojects) { -%>
+      chdir: "{{ project_dir }}/{{ item }}"
+    with_items:
+<%   serviceSubProjects.concat(buildOnlySubProjects).forEach(subProject => { -%>
+    - <%= subProject %>
+<%   }); -%>
+<% } else { -%>
+      chdir: "{{ project_dir }}"
+<% } -%>
+    tags: [compile]
+
+  - name: archive project
+    command: >-
+<% if (useSubprojects) { -%>
+      tar -czf {{ project_dir }}/{{ items }}.tar.gz
+<% } else { -%>
+      tar -czf {{ project_dir }}/{{ project_name }}.tar.gz
+<% } -%>
+      {% for exclude in
+        ['node_modules', 'ansible',
+        '.eslint*', '.git*', '.editorconfig',
+        '.travis.yml', 'circle.yml',
+        'README.*', 'CHANGELOG.*',
+        '*.DS_Store', '*.tar.gz']
+      %}
+        --exclude={{ exclude }}
+      {% endfor %}
+      ./
+    args:
+<% if (useSubprojects) { -%>
+      chdir: "{{ project_dir }}/{{ item }}"
+    with_items:
+<%   serviceSubProjects.forEach(subProject => { -%>
+    - <%= subProject %>
+<%   }); -%>
+<% } else { -%>
+      chdir: "{{ project_dir }}"
+<% } -%>
+    tags: [compress, archive]

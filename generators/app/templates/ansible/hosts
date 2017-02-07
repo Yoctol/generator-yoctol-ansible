@@ -1,0 +1,14 @@
+[deployment:children]
+develop
+
+[local]
+localhost ansible_connection=local
+
+[develop]
+localhost
+
+[staging]
+localhost
+
+[production]
+localhost

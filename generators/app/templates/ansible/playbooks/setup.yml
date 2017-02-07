@@ -1,0 +1,10 @@
+---
+- hosts: deployment
+
+# Script to setup host before deployment.
+
+  roles:
+  - role: angstwad.docker_ubuntu
+    docker_group_members: ["{{ ansible_user }}"]
+    become: true
+    tags: [docker-package]

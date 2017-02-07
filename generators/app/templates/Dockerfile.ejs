@@ -1,0 +1,25 @@
+FROM node:{{ node_version }}
+
+RUN useradd -G root -m {{ container_user }}
+<% if (subProject) { -%>
+WORKDIR {{ container_project_dir }}/<%= subProject %>
+<% } else { -%>
+WORKDIR {{ container_project_dir }}
+<% } -%>
+
+ENV NODE_ENV production
+
+<% if (subProject) { -%>
+ADD <%= subProject %>.tar.gz ./
+ADD init-<%= subProject %>.sh ./init.sh
+<% } else { -%>
+ADD {{ project_name }}.tar.gz ./
+ADD init.sh ./init.sh
+<% } -%>
+RUN chown app ./init.sh
+RUN chmod 550 ./init.sh
+
+EXPOSE 8080
+USER app
+
+CMD ./init.sh

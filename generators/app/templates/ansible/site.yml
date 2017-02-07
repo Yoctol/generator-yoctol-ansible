@@ -1,0 +1,13 @@
+---
+
+- name: build source code at local
+  include: plays/build.yml
+  tags: [build]
+
+- name: move builded code to the hosts
+  include: plays/distribute.yml
+  tags: [distribute]
+
+- name: build images & run containers
+  include: plays/run.yml
+  tags: [run]
