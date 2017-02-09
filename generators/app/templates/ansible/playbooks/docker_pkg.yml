@@ -1,7 +1,7 @@
 ---
 - hosts: deployment
 
-# Script to setup host before deployment.
+# Script to setup docker dependencies before deployment.
 
   roles:
   - role: angstwad.docker_ubuntu

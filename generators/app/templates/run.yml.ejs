@@ -40,7 +40,8 @@
       restart_policy: always
       volumes:
       - "{{ host_module_dir }}/<%= subProject %>:{{ container_project_dir }}/<%= subProject %>/node_modules/"
-      - "{{ host_config_dir }}:{{ container_project_dir }}/<%= subProject %>/config"
+      ### Inject the config files through volume.
+      # - "{{ host_config_dir }}:{{ container_project_dir }}/<%= subProject %>/config"
     tags: [docker-container]
 <%   }); -%>
 <% } else { -%>
@@ -54,7 +55,8 @@
       # - "postgres:postgres"
       volumes:
       - "{{ host_module_dir }}/default:{{ container_project_dir }}/node_modules/"
-      - "{{ host_config_dir }}:{{ container_project_dir }}/config"
+      ### Inject the config files through volume.
+      # - "{{ host_config_dir }}:{{ container_project_dir }}/config"
       state: started
       restart_policy: always
     tags: [docker-container]

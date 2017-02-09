@@ -74,31 +74,27 @@ module.exports = class extends Generator {
       this
     );
     if (this.useSubprojects) {
-      this.serviceSubProjects.forEach(subProject => {
-        this.fs.copyTpl(
-          this.templatePath('Dockerfile.ejs'),
-          this.destinationPath(this.ansibleDirName, `files/${subProject}-Dockerfile.template`),
-          { subProject }
-        );
-        this.fs.copy(
-          this.templatePath('init.sh'),
-          this.destinationPath(this.ansibleDirName, `files/init-${subProject}.sh`)
-        );
-      });
+      this.serviceSubProjects.forEach(this._copyFiles.bind(this));
     } else {
-      this.fs.copyTpl(
-        this.templatePath('Dockerfile.ejs'),
-        this.destinationPath(this.ansibleDirName, 'files/Dockerfile.template'),
-        { subProject: null }
-      );
-      this.fs.copy(
-        this.templatePath('init.sh'),
-        this.destinationPath(this.ansibleDirName, 'files/init.sh')
-      );
+      this._copyFiles(null);
     }
     this.fs.copy(
       this.templatePath('gitignore'),
       this.destinationPath(this.ansibleDirName, '.gitignore')
+    );
+  }
+
+  _copyFiles(subProject) {
+    const dockerfileName = subProject ? `${subProject}-Dockerfile` : 'Dockerfile';
+    const initFileName = subProject ? `init-${subProject}.sh` : 'init.sh';
+    this.fs.copyTpl(
+      this.templatePath('Dockerfile.ejs'),
+      this.destinationPath(this.ansibleDirName, `templates/${dockerfileName}`),
+      { subProject }
+    );
+    this.fs.copy(
+      this.templatePath('init.sh'),
+      this.destinationPath(this.ansibleDirName, `files/${initFileName}`)
     );
   }
 };
