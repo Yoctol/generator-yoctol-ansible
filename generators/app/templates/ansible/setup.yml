@@ -1,9 +1,9 @@
 ---
 # Define playbooks to setup hosts for the first time.
 - name: install docker dependencies
-  include: plays/docker_pkg.yml
+  include: playbooks/docker_pkg.yml
   tags: [docker-pkg]
 
 - name: setup cache directory
-  include: plays/cache.yml
+  include: playbooks/cache.yml
   tags: [cache]
