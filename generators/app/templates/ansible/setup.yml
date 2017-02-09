@@ -1,0 +1,5 @@
+---
+# Define playbooks to setup hosts for the first time.
+- name: install docker dependencies
+  include: plays/docker_pkg.yml
+  tags: [docker-pkg]
