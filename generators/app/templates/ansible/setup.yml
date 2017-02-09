@@ -3,3 +3,7 @@
 - name: install docker dependencies
   include: plays/docker_pkg.yml
   tags: [docker-pkg]
+
+- name: setup cache directory
+  include: plays/cache.yml
+  tags: [cache]

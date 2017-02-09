@@ -1,0 +1,26 @@
+---
+- hosts: deployment
+
+# Script to setup cache on host before deployment.
+
+  tacks:
+
+  - name: make module directory
+    become: yes
+    file:
+<% if (useSubprojects) { -%>
+      path: "{{ host_module_dir }}/{{ item }}"
+<% } else { -%>
+      path: "{{ host_module_dir }}/default"
+<% } -%>
+      state: directory
+      owner: root
+      group: root
+      mode: u=rwx,g=rwx
+<% if (useSubprojects) { -%>
+    with_items:
+<%   serviceSubProjects.forEach(subProject => { -%>
+    - <%= subProject %>
+<%   }); -%>
+<% } -%>
+    tags: [cache-dir]
