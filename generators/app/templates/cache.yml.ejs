@@ -25,6 +25,16 @@
 <% } -%>
     tags: [module-dir]
 
+  - name: make config directory
+    become: yes
+    file:
+      path: "{{ host_config_dir }}"
+      state: directory
+      owner: root
+      group: root
+      mode: u=rwx,g=r,o-rwx
+    tags: [config-dir]
+
   ### Render config files to cache directory, like database connection setting.
   # - name: render database config
   #   become: yes
@@ -33,5 +43,5 @@
   #     dest: "{{ host_config_dir }}/database.js"
   #     owner: root
   #     group: root
-  #     mode: u=rw,g=r,o-rwx
+  #     mode: u=rwx,g-rwx,o-rwx
   #   tags: [config]
