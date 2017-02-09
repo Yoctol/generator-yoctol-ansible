@@ -23,14 +23,15 @@
     - <%= subProject %>
 <%   }); -%>
 <% } -%>
-    tags: [cache-dir]
+    tags: [module-dir]
 
   ### Render config files to cache directory, like database connection setting.
   # - name: render database config
   #   become: yes
   #   template:
   #     src: ../templates/database.js.template
-  #     dest: "{{ host_cache_dir }}/database.js"
+  #     dest: "{{ host_config_dir }}/database.js"
   #     owner: root
   #     group: root
-  #   mode: u=rw,g=r,o-rwx
+  #     mode: u=rw,g=r,o-rwx
+  #   tags: [config]
