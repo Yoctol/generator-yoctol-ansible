@@ -12,7 +12,7 @@
   - name: move archived file to the host
     copy:
 <% if (useSubprojects) { -%>
-      src: "{{ project_dir }}/{{ items }}.tar.gz"
+      src: "{{ project_dir }}/{{ item }}.tar.gz"
       dest: "{{ host_distribution_dir }}/"
     with_items:
 <%   serviceSubProjects.forEach(subProject => { -%>
@@ -26,7 +26,7 @@
   - name: move init file to host
     copy:
 <% if (useSubprojects) { -%>
-      src: ../files/init-{{ items }}.sh
+      src: ../files/init-{{ item }}.sh
       dest: "{{ host_distribution_dir }}/"
     with_items:
 <%   serviceSubProjects.forEach(subProject => { -%>
@@ -40,8 +40,8 @@
   - name: move dockerfile to host
     template:
 <% if (useSubprojects) { -%>
-      src: ../files/{{ items }}-Dockerfile.template
-      dest: "{{ host_distribution_dir }}/{{ items }}-Dockerfile"
+      src: ../files/{{ item }}-Dockerfile.template
+      dest: "{{ host_distribution_dir }}/{{ item }}-Dockerfile"
     with_items:
 <%   serviceSubProjects.forEach(subProject => { -%>
     - <%= subProject %>

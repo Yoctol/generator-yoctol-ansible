@@ -23,7 +23,7 @@
   - name: archive project
     command: >-
 <% if (useSubprojects) { -%>
-      tar -czf {{ project_dir }}/{{ items }}.tar.gz
+      tar -czf {{ project_dir }}/{{ item }}.tar.gz
 <% } else { -%>
       tar -czf {{ project_dir }}/{{ project_name }}.tar.gz
 <% } -%>

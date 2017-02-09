@@ -5,9 +5,9 @@
 # Script to run app up.
 
 <% if (useSubprojects) { -%>
-  - name: build {{ items }} docker image
+  - name: build docker images
     docker_image:
-      name: "{{ project_name }}-{{ items }}"
+      name: "{{ project_name }}-{{ item }}"
 <% } else { -%>
   - name: build docker image
     docker_image:
@@ -28,34 +28,34 @@
 <% if (useSubprojects) { -%>
 <%   serviceSubProjects.forEach(subProject => { -%>
   - name: run <%= subProject %> container
-    docker:
+    docker_container:
       name: "{{ project_name }}-<%= subProject %>"
       image: "{{ project_name }}-<%= subProject %>:{{ version }}"
       ### Setup ports to expose on the host.
-      # ports: "{{ app_host_port }}:80"
+      # exposed_ports: "{{ app_host_port }}:80"
       ### Setup links between container.
       # links:
       # - "postgres:postgres"
-      state: reloaded
+      state: started
       restart_policy: always
       volumes:
-      - "{{ host_module_dir }}/{{ item }}:{{ container_project_dir }}/<%= subProject %>/node_modules/"
+      - "{{ host_module_dir }}/<%= subProject %>:{{ container_project_dir }}/<%= subProject %>/node_modules/"
       - "{{ host_config_dir }}:{{ container_project_dir }}/<%= subProject %>/config"
     tags: [docker-container]
 <%   }); -%>
 <% } else { -%>
   - name: run container
-    docker:
+    docker_container:
       name: "{{ project_name }}"
       image: "{{ project_name }}:{{ version | default('latest') }}"
-      ports: "{{ app_host_port }}:80"
+      exposed_ports: "{{ app_host_port }}:80"
       ### Setup links between container.
       # links:
       # - "postgres:postgres"
       volumes:
       - "{{ host_module_dir }}/default:{{ container_project_dir }}/node_modules/"
       - "{{ host_config_dir }}:{{ container_project_dir }}/config"
-      state: reloaded
+      state: started
       restart_policy: always
     tags: [docker-container]
 <% } -%>
