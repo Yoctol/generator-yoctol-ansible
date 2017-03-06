@@ -57,27 +57,32 @@ module.exports = class extends Generator {
   }
 
   writing() {
+    // copy static files
     this.fs.copy(
       this.templatePath('ansible/**/*'),
       this.destinationPath(this.ansibleDirName)
     );
-    ['build', 'distribute', 'run'].forEach(step => {
+    // render playbooks
+    ['build', 'distribute', 'run', 'cache'].forEach(step => {
       this.fs.copyTpl(
         this.templatePath(`${step}.yml.ejs`),
         this.destinationPath(this.ansibleDirName, `playbooks/${step}.yml`),
         this
       );
     });
+    // render group_vars
     this.fs.copyTpl(
       this.templatePath('vars.yml.ejs'),
       this.destinationPath(this.ansibleDirName, 'group_vars/all.yml'),
       this
     );
+    // copy Dockerfile and init.sh
     if (this.useSubprojects) {
       this.serviceSubProjects.forEach(this._copyFiles.bind(this));
     } else {
       this._copyFiles(null);
     }
+    // copy gitignore separately, since .gitignore is ignored by npm.
     this.fs.copy(
       this.templatePath('gitignore'),
       this.destinationPath(this.ansibleDirName, '.gitignore')
@@ -87,11 +92,13 @@ module.exports = class extends Generator {
   _copyFiles(subProject) {
     const dockerfileName = subProject ? `${subProject}-Dockerfile` : 'Dockerfile';
     const initFileName = subProject ? `init-${subProject}.sh` : 'init.sh';
+    // render Dockerfile
     this.fs.copyTpl(
       this.templatePath('Dockerfile.ejs'),
       this.destinationPath(this.ansibleDirName, `templates/${dockerfileName}`),
       { subProject }
     );
+    // copy init.sh
     this.fs.copy(
       this.templatePath('init.sh'),
       this.destinationPath(this.ansibleDirName, `files/${initFileName}`)
