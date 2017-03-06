@@ -8,6 +8,7 @@
   - name: build docker images
     docker_image:
       name: "{{ project_name }}-{{ item }}"
+      dockerfile: "{{ item }}-Dockerfile"
 <% } else { -%>
   - name: build docker image
     docker_image:
@@ -15,7 +16,6 @@
 <% } -%>
       tag: "{{ version }}"
       path: "{{ host_distribution_dir }}"
-      dockerfile: "{{ item }}-Dockerfile"
       force: true
     tags: [docker-image]
 <% if (useSubprojects) { -%>
