@@ -48,7 +48,7 @@ module.exports = class extends Generator {
         this.ansibleDirName = answers.ansibleDirName;
 
         this.useSubprojects = answers.useSubprojects;
-        const subProjects = answers.subProjects;
+        const subProjects = answers.subProjects || [];
 
         this.buildOnlySubProjects = answers.buildOnlySubProjects;
         this.serviceSubProjects = subProjects.filter(p => !this.buildOnlySubProjects.includes(p));
