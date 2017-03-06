@@ -1,5 +1,6 @@
 FROM node:{{ node_version }}
 
+# User and Working Directory
 RUN useradd -G root -m {{ container_user }}
 <% if (subProject) { -%>
 WORKDIR {{ container_project_dir }}/<%= subProject %>
@@ -7,8 +8,7 @@ WORKDIR {{ container_project_dir }}/<%= subProject %>
 WORKDIR {{ container_project_dir }}
 <% } -%>
 
-ENV NODE_ENV production
-
+# Copy Files
 <% if (subProject) { -%>
 ADD <%= subProject %>.tar.gz ./
 ADD init-<%= subProject %>.sh ./init.sh
@@ -19,7 +19,13 @@ ADD init.sh ./init.sh
 RUN chown app ./init.sh
 RUN chmod 550 ./init.sh
 
-EXPOSE 8080
-USER app
+# Environment Variables
+ENV NODE_ENV production
 
+# Configure the port app listening to.
+ENV APP_PORT {{ app_container_port }}
+EXPOSE {{ app_container_port }}
+
+# Execution
+USER app
 CMD ./init.sh

@@ -31,8 +31,8 @@
     docker_container:
       name: "{{ project_name }}-<%= subProject %>"
       image: "{{ project_name }}-<%= subProject %>:{{ version }}"
-      ### Setup ports to expose on the host.
-      # exposed_ports: "{{ app_host_port }}:80"
+      ### Setup ports to be published to the host.
+      # published_ports: "{{ app_host_port }}:{{ app_container_port }}"
       ### Setup links between container.
       # links:
       # - "postgres:postgres"
@@ -49,7 +49,7 @@
     docker_container:
       name: "{{ project_name }}"
       image: "{{ project_name }}:{{ version | default('latest') }}"
-      exposed_ports: "{{ app_host_port }}:80"
+      published_ports: "{{ app_host_port }}:{{ app_container_port }}"
       ### Setup links between container.
       # links:
       # - "postgres:postgres"
