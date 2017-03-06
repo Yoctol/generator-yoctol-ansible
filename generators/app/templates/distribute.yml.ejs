@@ -40,13 +40,13 @@
   - name: move dockerfile to host
     template:
 <% if (useSubprojects) { -%>
-      src: ../files/{{ item }}-Dockerfile.template
+      src: ../templates/{{ item }}-Dockerfile
       dest: "{{ host_distribution_dir }}/{{ item }}-Dockerfile"
     with_items:
 <%   serviceSubProjects.forEach(subProject => { -%>
     - <%= subProject %>
 <%   }); -%>
 <% } else { -%>
-      src: ../files/Dockerfile.template
+      src: ../templates/Dockerfile
       dest: "{{ host_distribution_dir }}/Dockerfile"
 <% } -%>
