@@ -15,7 +15,7 @@ host_distribution_dir: "{{ host_builds_dir }}/{{ version | default('default') }}
 
 # Directory to store cached files on the host.
 host_cache_dir: "{{ ansible_env['HOME'] }}/app_cache/{{ project_name }}"
-# Directory to cache node_modules of all spectrum sub-modules.
+# Directory to cache node_modules of all sub-modules.
 host_module_dir: "{{ host_cache_dir }}/node_modules"
 # Directory to cache configs.
 host_config_dir: "{{ host_cache_dir }}/config"
